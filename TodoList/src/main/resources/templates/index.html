@@ -1,0 +1,41 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<head>
+    <title>Add question</title>
+</head>
+<body>
+<h3>List of TODOs:</h3>
+<ul th:each="todoList : ${todoLists}">
+    <li>
+        <form method="POST" th:action="@{delete-todo-list(todoListId=${todoList.getId()})}">
+            Name: <span th:text="${todoList.getName()}"></span>
+            <input type="submit" value="delete">
+        </form>
+    </li>
+    <ul th:each="task : ${todoList.getTasks()}">
+        <li>
+            <form method="POST" th:action="@{update-task(taskId=${task.getId()}, done=${!task.isDone()})}">
+                <span th:style="${task.isDone() ? 'text-decoration: line-through;' : ''}">Task: <span
+                        th:text="${task.getValue()}"></span></span>
+                <input type="submit" th:value="${task.isDone() ? 'undo' : 'do'}">
+            </form>
+        </li>
+    </ul>
+    <ul>
+        <li>
+            <form th:object="${task}" method="POST" th:action="@{add-task(todoListId=${todoList.getId()})}">
+                Add new task:
+                <input type="text" th:field="*{value}"/>
+                <input type="submit" value="add">
+            </form>
+        </li>
+    </ul>
+</ul>
+<h3>Add:</h3>
+<form th:object="${todoList}" method="POST" th:action="@{add-todo-list}">
+    <label>Name:</label>
+    <input type="text" th:field="*{name}"/>
+    <input type="submit" value="add">
+</form>
+</body>
+</html>
